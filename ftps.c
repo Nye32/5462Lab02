@@ -7,8 +7,6 @@
 // NOTE: Large portion of code copied from Project 1
 // 		TCP server.c example.
 
-
-
 // Required Libraries
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -104,6 +102,7 @@ void main (int argc, char *argv[]) {
 		perror("Error: Unable to create output file.");
 	}
 	
+	// Recieve and Write Data
 	rval = 0;
 	int tempval = 0;
 	while (rval < filesize) {

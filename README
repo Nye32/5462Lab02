@@ -21,4 +21,11 @@ ___________________
 
 To run this program you will first run the server using the
 following command.
-	"ftps <local-port>"
+	|ftps <local-port>
+
+Once the server is running it will let you know by saying:
+	|'TCP Server Initialized. Awaiting Clients...'
+
+Then on on a seperate terminal/machine run the client by
+using the following command.
+	| ftpc <remote-IP> <remote-port> <local-file-to-transfer>
