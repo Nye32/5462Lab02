@@ -49,7 +49,7 @@ void main (int argc, char *argv[]) {
 	// Construct sent socket
 	sin_addr.sin_family = AF_INET;
 	sin_addr.sin_addr.s_addr = INADDR_ANY;
-	sin_addr.sin_port = port;
+	sin_addr.sin_port = htons(port);
 		
 
 	// Bind Socket
