@@ -40,6 +40,7 @@ void main (int argc, char *argv[]) {
 		exit(1);
 	}
 	port = (int)argv[1];
+
 	
 	// Wait for client connection
 	printf("TCP Server Initialized. Awaiting Clients...");
@@ -47,12 +48,14 @@ void main (int argc, char *argv[]) {
 		perror("Error: Unable to Open Datagram Socket.");
 		exit(1);
 	}
+
 	
 	// Construct sent socket
 	sin_addr.sin_family = AF_INET;
 	sin_addr.sin_addr.s_addr = INADDR_ANY;
-	sin_addr.sin_port = htons(atoi(port));
-	
+	sin_addr.sin_port = htons(port);
+		
+
 	// Bind Socket
 	if (bind(sock, (struct sockaddr *)&sin_addr, sizeof(struct sockaddr_in)) < 0) {
 		perror("Error: Unable to Bind Stream Socket");
