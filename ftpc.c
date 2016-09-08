@@ -57,7 +57,7 @@ unsigned long fileSize(const char *filePath)
 
 
 
-void createConnection(int * sockfd, struct sockaddr_in * sockaddr, char *port)
+void createConnection(int * sockfd, struct sockaddr_in * sockaddr, char *port, char * serverIp)
 {
 	if((*sockfd = socket(AF_INET, SOCK_STREAM, 0) < 0))
 	{
@@ -67,9 +67,9 @@ void createConnection(int * sockfd, struct sockaddr_in * sockaddr, char *port)
 	
 	sockaddr->sin_family = AF_INET;
 	sockaddr->sin_port = htons(atoi(port));
-	sockaddr->sin_addr.s_addr = INADDR_ANY;	
+	sockaddr->sin_addr.s_addr = *serverIp;	
 	memset(&(sockaddr->sin_zero),'\0',8);
-	if(connect(*sockfd,(const struct sockaddr *)sockaddr,sizeof(struct sockaddr)) < 0)
+	if(connect(*sockfd,(struct sockaddr *)sockaddr,sizeof(struct sockaddr_in)) < 0)
 	{
 		fprintf(stderr, "%s\n", "failed to connect");
 		close(*sockfd);
@@ -91,13 +91,13 @@ int main(int args, char * argv[])
 
 	if(transFile == NULL)//Checking if input file was opened correctly
  	{
-		fprintf(stdout,"%s","please enter a valid path to an existing file for the first argument\n");
+		fprintf(stdout,"%s","please enter a valid path to an existing file for the third argument\n");
 		exit(0);//if not opened correctly, exit program
 	}
  	int fsize = fileSize(argv[3]);	
 	int sockfd;
 	struct sockaddr_in sockaddr;		
-	createConnection(&sockfd, &sockaddr, argv[2]);
+	createConnection(&sockfd, &sockaddr, argv[2], argv[1]);
 	sendFile(&sockfd,transFile,fsize,argv[3]);
 	fprintf(stdout, "%s %lu %d \n", "ended normally", sizeof(int), fsize);
 }
