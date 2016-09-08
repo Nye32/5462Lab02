@@ -8,6 +8,8 @@
 #include <string.h>
 #include <sys/unistd.h>
 #include <sys/stat.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 
 void sendFile(int * sockfd, FILE * transFile, int fsize, char * filename)
 {
@@ -67,7 +69,7 @@ void createConnection(int * sockfd, struct sockaddr_in * sockaddr, char *port, c
 	
 	sockaddr->sin_family = AF_INET;
 	sockaddr->sin_port = htons(atoi(port));
-	sockaddr->sin_addr.s_addr = *serverIp;	
+	sockaddr->sin_addr.s_addr = inet_addr(serverIp);	
 	memset(&(sockaddr->sin_zero),'\0',8);
 	if(connect(*sockfd,(struct sockaddr *)sockaddr,sizeof(struct sockaddr_in)) < 0)
 	{
