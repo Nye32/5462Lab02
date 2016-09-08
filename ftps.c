@@ -19,17 +19,19 @@
 #include <strings.h>
 #include <stdlib.h>
 
+#define BUFSIZE 1000
+
 main (int argc, char *argv[]) {
 	// Variables
 	int port;
 	int socket;
 	int msgsocket;
-	int rrval = 0;
+	int rval = 0;
 	int filesize = 0;
 	char filename[] = "";
 	struct sockaddr_in sin_addr;
-	char databufin[1024];
-	char databufout[1024] = "Server Response: hi";
+	char databufin[BUFSIZE];
+	char databufout[BUFSIZE] = "Server Response: hi";
 	
 	// Ensure Proper Argument Usage
 	if (argc != 2) {
@@ -90,21 +92,37 @@ main (int argc, char *argv[]) {
 	}
 	filename = temp;
 	printf("Filename: %s\n", filename);
-	
-	// TODO
-	if (recv(msgsocket, databufin, 1024) < 0) {
-		perror("Error: Unable to read Stream Socket.");
-		exit(1);
+
+	// Output File
+	FILE *oufp;
+	oufp = fopen("recvd/" + filename, "w");
+	if (oufp == NULL) {
+		perror("Error: Unable to create output file %s", filename);
 	}
-	printf("Server Recieved: %s\n" databufin);
+	
+	rval = 0;
+	int temp = 0;
+	while (rval < filesize) {
+		temp = recv(msgsocket, databufin, BUFSIZE);
+		rval += temp;
+		if (temp  < 0) {
+			perror("Error: Unable to read Stream Socket.");
+			exit(1);
+		}
+		printf("Server Recieved: %s\n" databufin)
+
+		// Write to Output File
+		fprintf(oufp, "%s", databufin);
+	}
 	
 	// Respond to Client
-	if (write(msgsocket, databufout, 1024) < 0) {
+	if (write(msgsocket, databufout, BUFSIZE) < 0) {
 		perror("Error: Unable to write Stream Socket.")
 	}
 	printf("Server Sent: %s\n", databufout);
 	
-	// Close Connections
+	// Close File/Connections
+	fclose(oufp);
 	close(msgsocket);
 	close(socket);
 	
