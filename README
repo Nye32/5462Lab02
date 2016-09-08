@@ -1,0 +1,31 @@
+_____________________
+| Andrew Lee		|
+| Subash Chebolu	|
+| CSE5462	Lab 02	|
+| 0-06-16	README	|
+|___________________|
+
+___________________
+PROGRAM DESCRIPTION
+___________________
+
+The goal of this progam is to utilize a TCP Connection
+in order to send any file from a client to a server.
+
+The file sent by the client will be located in the "recvd" subdirectory in the server/host location.
+
+
+___________________
+Running Instruction
+___________________
+
+To run this program you will first run the server using the
+following command.
+	|ftps <local-port>
+
+Once the server is running it will let you know by saying:
+	|'TCP Server Initialized. Awaiting Clients...'
+
+Then on on a seperate terminal/machine run the client by
+using the following command.
+	| ftpc <remote-IP> <remote-port> <local-file-to-transfer>
