@@ -2,19 +2,17 @@
 
 CC = gcc
 
-CFILES = $(notdir $(wildcard *.c))
 
-OFILES = $(patsubst %.c,%.o,$(CFILES))
-
-
-ALL:FTPC
+ALL:FTPC FTPS
 
 
-FTPC:$(OFILES)
-	$(CC) $(OFILES) -o ftpc
+FTPC:ftpc.c
+	$(CC) ftpc.c -o ftpc
 
-%.o:%.c
-	$(CC) $< -c -o $@	
+
+FTPS:ftps.c
+	$(CC) ftps.c -o ftps
+
 
 clean:
-	rm $(OFILES) ftpc
+	rm ftpc ftps
