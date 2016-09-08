@@ -37,7 +37,7 @@ void main (int argc, char *argv[]) {
 		printf("ftps <local-port>\n\n");
 		exit(1);
 	}
-	port = (int)argv[1];
+	port = atoi(argv[1]);
 	
 	// Wait for client connection
 	printf("TCP Server Initialized. Awaiting Clients...\n");
@@ -45,12 +45,11 @@ void main (int argc, char *argv[]) {
 		perror("Error: Unable to Open Datagram Socket.");
 		exit(1);
 	}
-
 	
 	// Construct sent socket
 	sin_addr.sin_family = AF_INET;
 	sin_addr.sin_addr.s_addr = INADDR_ANY;
-	sin_addr.sin_port = htons(port);
+	sin_addr.sin_port = port;
 		
 
 	// Bind Socket
