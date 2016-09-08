@@ -38,10 +38,9 @@ void main (int argc, char *argv[]) {
 		exit(1);
 	}
 	port = (int)argv[1];
-
 	
 	// Wait for client connection
-	printf("TCP Server Initialized. Awaiting Clients...");
+	printf("TCP Server Initialized. Awaiting Clients...\n");
 	if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
 		perror("Error: Unable to Open Datagram Socket.");
 		exit(1);
