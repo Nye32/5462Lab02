@@ -1,6 +1,4 @@
-//What I had for Lab01. Obviously need to modify.
-
-	gcc -g -Wall -o count count.c
+	gcc -g -Wall -o ftps ftps.c
 
 clean:
 	$(RM) count

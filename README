@@ -9,11 +9,16 @@ ___________________
 PROGRAM DESCRIPTION
 ___________________
 
-TODO
+The goal of this progam is to utilize a TCP Connection
+in order to send any file from a client to a server.
+
+The file sent by the client will be located in the "recvd" subdirectory in the server/host location.
 
 
 ___________________
 Running Instruction
 ___________________
 
-TODO
+To run this program you will first run the server using the
+following command.
+	"ftps <local-port>"
