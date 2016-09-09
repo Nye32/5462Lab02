@@ -2,16 +2,17 @@
 
 CC = gcc
 
+OPTIONS = -std=gnu99
 
 ALL:FTPC FTPS
 
 
 FTPC:ftpc.c
-	$(CC) ftpc.c -o ftpc
+	$(CC) $(OPTIONS) ftpc.c -o ftpc
 
 
 FTPS:ftps.c
-	$(CC) ftps.c -o ftps
+	$(CC) $(OPTIONS) ftps.c -o ftps
 
 
 clean:
