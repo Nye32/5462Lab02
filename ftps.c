@@ -83,7 +83,7 @@ void main (int argc, char *argv[]) {
 	for (int i = 0; i < 4; i++) {
 		temp[i] = databufin[i];
 	}
-	filesize = ntohs(*((int*)(temp)));
+	filesize = ntohl(*((uint32_t *)(temp)));
 	//filesize = ntohs(filesize);
 	printf("Filesize: %d\n", filesize);
 	
@@ -130,7 +130,6 @@ void main (int argc, char *argv[]) {
 		fwrite(databufin, 1, tempval, oufp);
 		//fprintf(oufp, "%s", databufin);
 	}
-	
 	// Respond to Client
 	if (write(msgsock, databufout, BUFSIZE) < 0) {
 		perror("Error: Unable to write Stream Socket.");

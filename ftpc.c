@@ -13,29 +13,16 @@
 #include <errno.h>
 
 
-void sendFile(int * sockfd, FILE * transFile, int fsize, char * filename)
+void sendFile(int * sockfd, FILE * transFile, uint32_t fsize, char * filename)
 {
+	fprintf(stderr, "size of file is %d\n", fsize);
 	char * buf = (char *) malloc(1000);
 	bzero(buf,1000);
-	int netfsize = htons(fsize);	
-	memcpy(buf, &netfsize,sizeof(int));
+	uint32_t netfsize = htonl(fsize);	
+	memcpy(buf, &netfsize,sizeof(uint32_t));
 	memcpy(buf+4,filename,strlen(filename));
-	int read = fread(buf+24,1,1000-24,transFile);
-	while(read != 1000-24)
-	{
-		if(feof(transFile))
-		{
-			break;
-		}
-		else
-		{
-			fseek(transFile,0,SEEK_SET);
-			read = fread(buf+24,1,1000-24,transFile); 
-			continue;
-		}
-	}
-	send(*sockfd,buf,read,0);
-	
+	send(*sockfd,buf,24,0);
+	int read = 0;	
 	while(feof(transFile) == 0)
 	{
 		read = fread(buf,1,1000,transFile);
@@ -58,7 +45,7 @@ unsigned long fileSize(const char *filePath)
  
  stat(filePath,  &fileStat);//filling fileStat with statistics of file
  
- return fileStat.st_size;//returning only the size of file from stat stru    ct
+ return (uint32_t)fileStat.st_size;//returning only the size of file from stat stru    ct
 }
 
 
@@ -101,10 +88,10 @@ int main(int args, char * argv[])
 		fprintf(stdout,"%s","please enter a valid path to an existing file for the third argument\n");
 		exit(0);//if not opened correctly, exit program
 	}
- 	int fsize = fileSize(argv[3]);	
+ 	uint32_t fsize = fileSize(argv[3]);	
 	int sockfd;
 	struct sockaddr_in sockaddr;		
 	createConnection(&sockfd, &sockaddr, argv[2], argv[1]);
 	sendFile(&sockfd,transFile,fsize,argv[3]);
-	fprintf(stdout, "%s %lu %d \n", "ended normally", sizeof(int), fsize);
+	fprintf(stdout, "%s %lu %d \n", "ended normally", sizeof(uint32_t), fsize);
 }
