@@ -16,6 +16,8 @@
 #include <string.h>
 #include <strings.h>
 #include <stdlib.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 #define BUFSIZE 1000
 
@@ -71,8 +73,9 @@ void main (int argc, char *argv[]) {
 	bzero(databufin, sizeof(databufin));
 	
 	// Read Header
-	while (rval < 24) {
-		rval += recv(msgsock, databufin, 24, 0);
+	rval = 24;
+	while (rval > 0) {
+		rval -= recv(msgsock, databufin, rval, 0);
 	}
 	
 	// Determine Size of file from header
@@ -80,8 +83,8 @@ void main (int argc, char *argv[]) {
 	for (int i = 0; i < 4; i++) {
 		temp[i] = databufin[i];
 	}
-	filesize = atoi(temp);
-	filesize = ntohl(filesize);
+	filesize = ntohs(*((int*)(temp)));
+	//filesize = ntohs(filesize);
 	printf("Filesize: %d\n", filesize);
 	
 	// Determine Filename
@@ -91,15 +94,26 @@ void main (int argc, char *argv[]) {
 	}
 	strcpy(filename, tempp);
 	printf("Filename: %s\n", filename);
-	strcpy("recvd/",filename);
-
+	filename[0] = 'r';
+	filename[1] = 'e';
+	filename[2] = 'c';
+	filename[3] = 'v';
+	filename[4] = 'd';
+	filename[5] = '/';
+	strcat(filename,tempp);
+	printf("Filename: %s\n", filename);
+	
+	struct stat st;
+	if(stat("recvd",&st) != 0)
+	{
+		mkdir("recvd",0700);
+	}
 	// Output File
 	FILE *oufp;
-	oufp = fopen(filename, "w");
+	oufp = fopen(filename, "w+");
 	if (oufp == NULL) {
 		perror("Error: Unable to create output file.");
 	}
-	
 	// Recieve and Write Data
 	rval = 0;
 	int tempval = 0;
@@ -110,10 +124,11 @@ void main (int argc, char *argv[]) {
 			perror("Error: Unable to read Stream Socket.");
 			exit(1);
 		}
-		printf("Server Recieved: %s\n", databufin);
+		//printf("Server Recieved: %s\n", databufin);
 
 		// Write to Output File
-		fprintf(oufp, "%s", databufin);
+		fwrite(databufin, 1, tempval, oufp);
+		//fprintf(oufp, "%s", databufin);
 	}
 	
 	// Respond to Client
@@ -128,23 +143,4 @@ void main (int argc, char *argv[]) {
 	close(sock);
 	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

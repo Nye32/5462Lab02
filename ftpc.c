@@ -10,10 +10,12 @@
 #include <sys/stat.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <errno.h>
+
 
 void sendFile(int * sockfd, FILE * transFile, int fsize, char * filename)
 {
-	char * buf = (char *) malloc(sizeof(1000));
+	char * buf = (char *) malloc(1000);
 	bzero(buf,1000);
 	int netfsize = htons(fsize);	
 	memcpy(buf, &netfsize,sizeof(int));
@@ -34,16 +36,18 @@ void sendFile(int * sockfd, FILE * transFile, int fsize, char * filename)
 	}
 	send(*sockfd,buf,read,0);
 	
-	while(!feof(transFile))
+	while(feof(transFile) == 0)
 	{
 		read = fread(buf,1,1000,transFile);
-		if(send(*sockfd,buf,read,0) != read)
+		int sent = send(*sockfd,buf,read,0);
+		if(sent != read)
 		{
+			fprintf(stdout, "sent %d Reason %s\n\n", sent, strerror(errno));
 			fprintf(stderr,"%s\n","failed to send correctly");
 			exit(0);
 		}
 	}
-
+	free(buf);
 	return;
 }
 
@@ -61,7 +65,8 @@ unsigned long fileSize(const char *filePath)
 
 void createConnection(int * sockfd, struct sockaddr_in * sockaddr, char *port, char * serverIp)
 {
-	if((*sockfd = socket(AF_INET, SOCK_STREAM, 0) < 0))
+	*sockfd = socket(AF_INET, SOCK_STREAM,0);
+	if(*sockfd < 0)
 	{
 		fprintf(stdout, "%s\n", "socket could not be made");
 		exit(0);
@@ -73,7 +78,7 @@ void createConnection(int * sockfd, struct sockaddr_in * sockaddr, char *port, c
 	memset(&(sockaddr->sin_zero),'\0',8);
 	if(connect(*sockfd,(struct sockaddr *)sockaddr,sizeof(struct sockaddr_in)) < 0)
 	{
-		fprintf(stderr, "%s\n", "failed to connect");
+		fprintf(stderr, "%s failed becuase %s\n", "failed to connect", strerror(errno));
 		close(*sockfd);
 		exit(0);
 	}
