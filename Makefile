@@ -17,3 +17,4 @@ FTPS:ftps.c
 
 clean:
 	rm ftpc ftps
+	rm -r recvd

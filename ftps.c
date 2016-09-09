@@ -35,7 +35,8 @@ void main (int argc, char *argv[]) {
 	
 	// Ensure Proper Argument Usage
 	if (argc != 2) {
-		printf("ERROR: Incorrect number of arguements. Please run using the following format...\n");
+		printf("ERROR: Incorrect number of arguements.");
+		printf(" Please run using the following format...\n");
 		printf("ftps <local-port>\n\n");
 		exit(1);
 	}
@@ -79,20 +80,19 @@ void main (int argc, char *argv[]) {
 	}
 	
 	// Determine Size of file from header
-	char temp[4];
-	for (int i = 0; i < 4; i++) {
+	char temp[20];
+	int i = 0;
+	for (i = 0; i < 4; i++) {
 		temp[i] = databufin[i];
 	}
 	filesize = ntohl(*((uint32_t *)(temp)));
-	//filesize = ntohs(filesize);
 	printf("Filesize: %d\n", filesize);
 	
 	// Determine Filename
-	char tempp[20];
-	for (int i = 0; i < 20; i++) {
-		tempp[i] = databufin[i+4];
+	for (i = 0; i < 20; i++) {
+		temp[i] = databufin[i+4];
 	}
-	strcpy(filename, tempp);
+	strcpy(filename, temp);
 	printf("Filename: %s\n", filename);
 	filename[0] = 'r';
 	filename[1] = 'e';
@@ -100,7 +100,7 @@ void main (int argc, char *argv[]) {
 	filename[3] = 'v';
 	filename[4] = 'd';
 	filename[5] = '/';
-	strcat(filename,tempp);
+	strcat(filename,temp);
 	printf("Filename: %s\n", filename);
 	
 	struct stat st;
@@ -124,22 +124,14 @@ void main (int argc, char *argv[]) {
 			perror("Error: Unable to read Stream Socket.");
 			exit(1);
 		}
-		//printf("Server Recieved: %s\n", databufin);
 
 		// Write to Output File
 		fwrite(databufin, 1, tempval, oufp);
-		//fprintf(oufp, "%s", databufin);
+		//fprintf(oufp, "%s", databufin); //Troubleshooting
 	}
-	// Respond to Client
-	if (write(msgsock, databufout, BUFSIZE) < 0) {
-		perror("Error: Unable to write Stream Socket.");
-	}
-	printf("Server Sent: %s\n", databufout);
 	
 	// Close File/Connections
 	fclose(oufp);
 	close(msgsock);
 	close(sock);
-	
 }
-
