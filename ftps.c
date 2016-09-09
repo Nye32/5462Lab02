@@ -92,8 +92,7 @@ void main (int argc, char *argv[]) {
 	for (i = 0; i < 20; i++) {
 		temp[i] = databufin[i+4];
 	}
-	strcpy(filename, temp);
-	printf("Filename: %s\n", filename);
+	printf("Filename: %s\n", temp);
 	filename[0] = 'r';
 	filename[1] = 'e';
 	filename[2] = 'c';
