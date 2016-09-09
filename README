@@ -2,7 +2,7 @@ _____________________
 | Andrew Lee		|
 | Subash Chebolu	|
 | CSE5462	Lab 02	|
-| 0-06-16	README	|
+| 09-06-16	README	|
 |___________________|
 
 ___________________
@@ -14,6 +14,28 @@ in order to send any file from a client to a server.
 
 The file sent by the client will be located in the "recvd" subdirectory in the server/host location.
 
+	| ftps.c
+
+The ftps.c file contains the code for the server. The server
+is responsible for creating a socket and listening for a
+client to connect. Upon connection the server will expect
+the first 24 bytes recieved to contain the filesize and
+filename of the file to be transferred. The server will then
+read from the stream the appropriate number of bytes as
+described by the filesize in chunks of 1000. The fill will be
+stored in a newly created subdirectory "recvd".
+
+	| ftpc.c
+
+The ftpc.c file containst he code for the client. The client
+is responsible for establishing a socket connection with the
+server using the server's ip and port numbers. The client
+must also have access to the file that is to be transferred.
+As described below, these are all parameters to be used when
+running ftpc. The client determines the filesize and filename
+and sends them to the server as the first 24 bytes. The client
+then sends the bytes of the file until the entire file has
+been sent.
 
 ___________________
 Running Instruction
